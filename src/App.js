@@ -1,29 +1,33 @@
-import React from "react";
-import "./App.css";
+import Createflashcard from "./components/createflashcard/Createflashcard.js";
+import Mycards from "./components/mycards/Mycards.js";
+import Navbar from "./components/navbar/Navbar.js";
+import Viewcard from "./components/viewcard/Viewcard.js";
 
-import { Routes, Route } from "react-router-dom";
 
-import CreateFlashCard from "./pages/CreateFlashCard";
-import MyFlashCard from "./pages/MyFlashCard";
-import FlashCardDetails from "./pages/FlashCardDetails";
-import HomePage from "./pages/HomePage";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import {getMyflashCards} from './service/Localstorage.js'
+import { useState, useEffect } from "react";
 
 function App() {
+  const [data, setData]= useState([])
+  
+  useEffect(()=>{
+    setData(getMyflashCards())
+  },[])
+
+
   return (
-    <div className="w-full min-h-screen bg-[#f8f4ef] font-Montserrat">
-      <div className="px-5 xl:px-32 container mx-auto">
-        <HomePage />
-        {/* All the Routes are Defined here */}
+    <>
+      <HashRouter >
+        <Navbar />
         <Routes>
-          <Route path="/" element={<CreateFlashCard />} />
-          <Route path="/myflashcard" element={<MyFlashCard />} />
-          <Route
-            path="/flashcarddetails/:groupId"
-            element={<FlashCardDetails />}
-          />
+          <Route path="/" exact element={<Createflashcard />} />
+
+          <Route path="/mycards"   element={<Mycards />} />
+          <Route path="/view-card/details/:id"  element={<Viewcard data={data}/>} />
         </Routes>
-      </div>
-    </div>
+      </HashRouter>
+    </>
   );
 }
 
